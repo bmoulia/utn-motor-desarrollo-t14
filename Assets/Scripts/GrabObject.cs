@@ -81,7 +81,7 @@ public class GrabObject : MonoBehaviour
             // ajustar distancia con la rueda
             distanciaAgarre += Input.GetAxis("Mouse ScrollWheel") * 5f;
             //control de cercania
-            distanciaAgarre = Mathf.Clamp(distanciaAgarre, 4f, 10f);
+            distanciaAgarre = Mathf.Clamp(distanciaAgarre, 5f, 10f);
 
 
             Vector3 puntoDestino = cam.transform.position + cam.transform.forward * distanciaAgarre;
