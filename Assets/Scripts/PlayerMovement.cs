@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float mouseSensibility = 200.0f;
     public float gravity = -9.81f;
     private float velocidadVertical;
+    public float jump = 5f;
 
 
 
@@ -28,6 +29,11 @@ public class PlayerMovement : MonoBehaviour
         }
         //caida
         velocidadVertical += gravity * Time.deltaTime;
+        //salto
+        if (controller.isGrounded && Input.GetButtonDown("Jump"))
+        {
+            velocidadVertical = jump;
+        }
 
         //movimiento del mouse
         float mouseX = Input.GetAxis("Mouse X") * mouseSensibility * Time.deltaTime;
@@ -38,7 +44,6 @@ public class PlayerMovement : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
         Vector3 direccion = transform.right * x + transform.forward * y;
-        controller.Move(direccion * movementSpeed * Time.deltaTime);
 
         Vector3 movimiento = direccion * movementSpeed;
         movimiento.y = velocidadVertical;
