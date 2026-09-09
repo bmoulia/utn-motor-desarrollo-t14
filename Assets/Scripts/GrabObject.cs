@@ -13,12 +13,15 @@ public class GrabObject : MonoBehaviour
     public float alcance = 5;
     private Camera cam;
 
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _weaponRayClip;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
         cam = Camera.main; 
+        _audioSource.clip = _weaponRayClip;
 
     }
 
@@ -48,6 +51,7 @@ public class GrabObject : MonoBehaviour
         // al apretar el clic, intento agarrar
         if (Input.GetMouseButtonDown(0))
         {
+            PlaySound(true);
             if (Physics.Raycast(origen, direccion, out hit, alcance))
             {
                 if (hit.collider.CompareTag("Agarrable"))
@@ -60,6 +64,7 @@ public class GrabObject : MonoBehaviour
         // cuando suelto el clic
         if (Input.GetMouseButtonUp(0))
         {
+            PlaySound(false);
             objetoAgarrado = null;
         }
 
@@ -89,6 +94,15 @@ public class GrabObject : MonoBehaviour
             objetoAgarrado.linearVelocity = direccionHaciaDestino * 10f;
             objetoAgarrado.angularVelocity = Vector3.zero;
         }
+
+    }
+
+    private void PlaySound(bool click)
+    {
+        if (click)
+        {
+            if(!_audioSource.isPlaying) _audioSource.Play();
+        }else if (_audioSource.isPlaying) _audioSource.Stop();
 
     }
 }

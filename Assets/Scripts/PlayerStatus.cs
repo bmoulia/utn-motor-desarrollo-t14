@@ -1,4 +1,6 @@
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
+using UnityEngine.InputSystem.Switch;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -15,8 +17,18 @@ public class PlayerStatus : MonoBehaviour
 
     private playerState _playerCurrentState;
     private playerState _playerNewState;
-
+    private string _playerMovementState;
+    private string _LastplayerMovementState;
     private string _gameManagerKey = "PlayerState";
+
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioSource _walkAudioSource;
+
+    [SerializeField] private AudioClip _walkClip;
+    [SerializeField] private AudioClip _jumpClip;
+    [SerializeField] private AudioClip _landClip;
+
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -24,6 +36,7 @@ public class PlayerStatus : MonoBehaviour
     {
         _playerCurrentState = playerState.Healthy;
         _playerNewState = playerState.Healthy;
+        _walkAudioSource.clip = _walkClip;
     }
 
     // Update is called once per frame
@@ -34,6 +47,9 @@ public class PlayerStatus : MonoBehaviour
             _playerCurrentState = _playerNewState;
             UpdateGameManager(_playerCurrentState);
         }
+        chekSound();
+
+
     }
 
     //si hay un cambio en la vida del jugador, se debe llamar esta funcion para validar si está por encima del umbral de "playerLowHealth".
@@ -74,5 +90,48 @@ public class PlayerStatus : MonoBehaviour
                 break;
         }
     }
+
+    //La logica que controla el sonido del jugador
+    private void chekSound()
+    {
+        if (_playerMovementState == "Jumping" && _LastplayerMovementState != "Jumping")
+        {
+            //ejecuta el sonido de salto 
+            _audioSource.PlayOneShot(_jumpClip);
+            
+        }
+        else if (_playerMovementState != "Falling" && _LastplayerMovementState == "Falling")
+        {
+            //ejecuta el sonido de aterrizaje
+            _audioSource.PlayOneShot(_landClip);
+
+        }
+        else if (_playerMovementState == "Walking")
+        {
+            
+            //ejecuta el sonido de caminata
+            if(!_walkAudioSource.isPlaying) _walkAudioSource.Play();
+
+
+        }
+        else if (_playerMovementState != "Walking")
+        {
+            if (_walkAudioSource.isPlaying) _walkAudioSource.Stop();
+        }
+        else if (_playerMovementState == "Static")
+        {
+            
+        }
+
+
+    }
+
+    public void GetPlayerMovementState(string movementState)
+    {
+        _LastplayerMovementState = _playerMovementState;
+        _playerMovementState = movementState;
+        
+    }
+
 
 }

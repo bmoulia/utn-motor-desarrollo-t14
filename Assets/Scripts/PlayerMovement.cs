@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,8 +10,9 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f;
     private float velocidadVertical;
     public float jump = 5f;
+    private string lastPlayerMovementState = "";
 
-
+    [SerializeField] PlayerStatus _playerStatus;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -49,5 +51,23 @@ public class PlayerMovement : MonoBehaviour
         movimiento.y = velocidadVertical;
 
         controller.Move(movimiento * Time.deltaTime);
+
+        
+        calculatePlayerMovementState(movimiento);
+
+    }
+
+    //esto es para determiar el estado actual del movimiento del player para poder triggerear sonidos y animaciones.
+    private void calculatePlayerMovementState(Vector3 mov)
+    {
+        string playerMovementState;
+        if (velocidadVertical > 0 && !controller.isGrounded) playerMovementState = "Jumping";
+        else if (velocidadVertical < 0 && !controller.isGrounded) playerMovementState = "Falling";
+        else if (mov.x != 0 || mov.z != 0) playerMovementState = "Walking";
+        else playerMovementState = "Static";
+
+
+            _playerStatus.GetPlayerMovementState(playerMovementState);
+
     }
 }
