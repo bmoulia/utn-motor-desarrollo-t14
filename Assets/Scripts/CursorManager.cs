@@ -9,10 +9,9 @@ public class CursorManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            UnlockCursor();
-        }
+        // Si el juego está en pausa, no toco el cursor: manda el PauseMenu.
+        if (Time.timeScale == 0f)
+            return;
 
         if (Input.GetMouseButtonDown(0))
         {
