@@ -13,6 +13,14 @@ public class PlayerMovement : MonoBehaviour
     private string lastPlayerMovementState = "";
 
     [SerializeField] PlayerStatus _playerStatus;
+    public Animator animator;
+
+    //private float x, y;
+
+    //public Rigidbody rb;
+    //public Transform groundCheck;
+    //public float groundDistance = 0.1f;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,13 +37,17 @@ public class PlayerMovement : MonoBehaviour
         {
             velocidadVertical = -2f;
         }
+        
+        //salto
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Salto");
+            velocidadVertical = Mathf.Sqrt(jump * -2f * gravity);
+            animator.SetTrigger("Jump");
+        }
+
         //caida
         velocidadVertical += gravity * Time.deltaTime;
-        //salto
-        if (controller.isGrounded && Input.GetButtonDown("Jump"))
-        {
-            velocidadVertical = jump;
-        }
 
         //movimiento del mouse
         float mouseX = Input.GetAxis("Mouse X") * mouseSensibility * Time.deltaTime;
@@ -69,5 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
             _playerStatus.GetPlayerMovementState(playerMovementState);
 
+        animator.SetFloat("VelX", x);
+        animator.SetFloat("VelY", y);
     }
 }
