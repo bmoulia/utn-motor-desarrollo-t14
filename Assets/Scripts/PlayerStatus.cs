@@ -21,6 +21,11 @@ public class PlayerStatus : MonoBehaviour
     private string _LastplayerMovementState;
     private string _gameManagerKey = "PlayerState";
 
+    private float _jumpCooldown = 0.5f;
+    private float _currentJumpCooldown = 0f;
+    private float _landCooldown = 0.5f;
+    private float _currentLandCooldown = 0f;
+
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioSource _walkAudioSource;
 
@@ -48,6 +53,11 @@ public class PlayerStatus : MonoBehaviour
             UpdateGameManager(_playerCurrentState);
         }
         chekSound();
+
+        if (_currentJumpCooldown > 0) _currentJumpCooldown -= Time.deltaTime;
+        else if (_currentJumpCooldown < 0) _currentJumpCooldown = 0;
+        if (_currentLandCooldown > 0) _currentLandCooldown -= Time.deltaTime;
+        else if (_currentLandCooldown < 0) _currentLandCooldown = 0;
 
 
     }
@@ -94,17 +104,17 @@ public class PlayerStatus : MonoBehaviour
     //La logica que controla el sonido del jugador
     private void chekSound()
     {
-        if (_playerMovementState == "Jumping" && _LastplayerMovementState != "Jumping")
+        if (_playerMovementState == "Jumping" && _LastplayerMovementState != "Jumping" && _currentJumpCooldown <= 0)
         {
             //ejecuta el sonido de salto 
             _audioSource.PlayOneShot(_jumpClip);
-            
+            _currentJumpCooldown = _jumpCooldown;
         }
-        else if (_playerMovementState != "Falling" && _LastplayerMovementState == "Falling")
+        else if (_playerMovementState != "Falling" && _LastplayerMovementState == "Falling" && _currentLandCooldown <= 0)
         {
             //ejecuta el sonido de aterrizaje
             _audioSource.PlayOneShot(_landClip);
-
+            _currentLandCooldown = _landCooldown;
         }
         else if (_playerMovementState == "Walking")
         {
