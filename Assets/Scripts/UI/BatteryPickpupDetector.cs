@@ -1,16 +1,32 @@
+
 using UnityEngine;
 
-public class BatteryPickpupDetector : MonoBehaviour
+public class BatteryPickupDetector : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public ObjectiveUI objectiveUI;
+    public Rigidbody battery;
+
+    private Vector3 initialPosition;
+    private bool pickedUp = false;
+
+    private void Start()
     {
-        
+        if (battery != null)
+            initialPosition = battery.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (pickedUp || battery == null || objectiveUI == null)
+            return;
+
+        float distanceMoved =
+            Vector3.Distance(battery.position, initialPosition);
+
+        if (distanceMoved > 0.5f)
+        {
+            pickedUp = true;
+            objectiveUI.CompleteObjective();
+        }
     }
 }

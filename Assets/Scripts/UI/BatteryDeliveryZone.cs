@@ -1,5 +1,7 @@
 
 using UnityEngine;
+using TMPro;
+using System.Collections;
 
 public class BatteryDeliveryZone : MonoBehaviour
 {
@@ -17,6 +19,6 @@ public class BatteryDeliveryZone : MonoBehaviour
             return;
 
         completed = true;
-        objectiveUI.CompleteObjective();
+        objectiveUI.ShowBridgeObjective();
     }
 }

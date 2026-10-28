@@ -49468,13 +49468,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f785980195e312f419d2bc478d174062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveUI
-  objectivePopup: {fileID: 0}
+  objectivePopup: {fileID: 995641378}
   objectiveTitle: {fileID: 136222640}
   objectiveDescription: {fileID: 886198608}
   announcementDuration: 4
   objectives:
   - Agarra la bateria del suelo
   - Ahora llevala al camion de bomberos
+  - Ahora cruza el puente y move esos bloques para bajar el puente
+  - Podriamos usar esos bloques para subir al chanchito y saltar a los libros
+  - Para mover ese tren necesitamos la dinamita que esta en la cama
 --- !u!1 &1000832573
 GameObject:
   m_ObjectHideFlags: 0
@@ -65960,6 +65963,45 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1460209861 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2de683044f5ea6c439c54c83b8925fc1, type: 3}
+  m_PrefabInstance: {fileID: 1636610148}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1460209865
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460209861}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.24918807, y: 0.23380283, z: 0.2215148}
+  m_Center: {x: -0.006562239, y: 0.11904709, z: -0.0063412106}
+--- !u!114 &1460209866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460209861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74f36e999f03144db5cb40fa2dd7bba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BookContactDetector
+  objectiveUI: {fileID: 995641382}
 --- !u!1 &1495507533
 GameObject:
   m_ObjectHideFlags: 0
@@ -72350,7 +72392,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2de683044f5ea6c439c54c83b8925fc1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1460209866}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2de683044f5ea6c439c54c83b8925fc1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1460209865}
   m_SourcePrefab: {fileID: 100100000, guid: 2de683044f5ea6c439c54c83b8925fc1, type: 3}
 --- !u!1 &1642716913
 GameObject:
@@ -90537,6 +90585,7 @@ GameObject:
   - component: {fileID: 1909469187}
   - component: {fileID: 1909469186}
   - component: {fileID: 1909469185}
+  - component: {fileID: 1909469191}
   m_Layer: 0
   m_Name: CarTrack
   m_TagString: Untagged
@@ -90705,6 +90754,21 @@ Transform:
   - {fileID: 1055426672}
   m_Father: {fileID: 1785829672}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1909469191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909469184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 706c564ea53d3c044bad5516b8fd6d5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BridgeMovementDetector
+  objectiveUI: {fileID: 995641382}
+  carTrack: {fileID: 1909469190}
+  movementThreshold: 0.6
 --- !u!43 &1914980726
 Mesh:
   m_ObjectHideFlags: 0
@@ -91490,6 +91554,7 @@ GameObject:
   - component: {fileID: 1934759557}
   - component: {fileID: 1934759556}
   - component: {fileID: 1934759555}
+  - component: {fileID: 1934759559}
   m_Layer: 0
   m_Name: Battery
   m_TagString: Agarrable
@@ -91619,6 +91684,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1934759553}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1934759559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934759553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bef3ed0d6133f944ab496030742c7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BatteryPickupDetector
+  objectiveUI: {fileID: 995641382}
+  battery: {fileID: 1934759555}
 --- !u!43 &1944154935
 Mesh:
   m_ObjectHideFlags: 0
@@ -149654,6 +149733,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 32c088aaddc84004c87e6bc32ad6d68f, type: 3}
       propertyPath: m_Name
       value: lpMale_rig_tpose
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 32c088aaddc84004c87e6bc32ad6d68f, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
