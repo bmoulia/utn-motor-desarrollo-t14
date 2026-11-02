@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,7 +10,16 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f;
     private float velocidadVertical;
     public float jump = 5f;
+    private string lastPlayerMovementState = "";
 
+    [SerializeField] PlayerStatus _playerStatus;
+    public Animator animator;
+
+    //private float x, y;
+
+    //public Rigidbody rb;
+    //public Transform groundCheck;
+    //public float groundDistance = 0.1f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,13 +37,17 @@ public class PlayerMovement : MonoBehaviour
         {
             velocidadVertical = -2f;
         }
+        
+        //salto
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Salto");
+            velocidadVertical = Mathf.Sqrt(jump * -2f * gravity);
+            animator.SetTrigger("Jump");
+        }
+
         //caida
         velocidadVertical += gravity * Time.deltaTime;
-        //salto
-        if (controller.isGrounded && Input.GetButtonDown("Jump"))
-        {
-            velocidadVertical = jump;
-        }
 
         //movimiento del mouse
         float mouseX = Input.GetAxis("Mouse X") * mouseSensibility * Time.deltaTime;
@@ -49,5 +63,25 @@ public class PlayerMovement : MonoBehaviour
         movimiento.y = velocidadVertical;
 
         controller.Move(movimiento * Time.deltaTime);
+
+        
+        calculatePlayerMovementState(movimiento);
+
+    }
+
+    //esto es para determiar el estado actual del movimiento del player para poder triggerear sonidos y animaciones.
+    private void calculatePlayerMovementState(Vector3 mov)
+    {
+        string playerMovementState;
+        if (velocidadVertical > 0 && !controller.isGrounded) playerMovementState = "Jumping";
+        else if (velocidadVertical < 0 && !controller.isGrounded) playerMovementState = "Falling";
+        else if (mov.x != 0 || mov.z != 0) playerMovementState = "Walking";
+        else playerMovementState = "Static";
+
+
+            _playerStatus.GetPlayerMovementState(playerMovementState);
+
+        //animator.SetFloat("VelX", x);TUVE QUE COMENTAR ESTO PORQUE DA ERROR Y NO ME DEJA COMPILAR
+        //animator.SetFloat("VelY", y);TUVE QUE COMENTAR ESTO PORQUE DA ERROR Y NO ME DEJA COMPILAR
     }
 }
