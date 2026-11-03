@@ -1,61 +1,185 @@
+
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour
 {
-    [SerializeField] private string _movementType;
-    [SerializeField] private float _speed;
-    [SerializeField]  private GameObject _patrollPoint;
-    [SerializeField] private GameObject _spawnPoint;
-    [SerializeField] private GameObject _player;
-    private bool _playerLocated;
-    private bool _ida;
+    [SerializeField] private float _velocidad = 2f;
+    [SerializeField] private float _patrolRadiud = 5f;
+    [SerializeField] private float _tiempoDeEspera = 2f;
 
-    public GameObject PatrollPoint {  get { return _patrollPoint; } set { _patrollPoint = value; } }
-    public GameObject SpawnPoint {  get { return _spawnPoint; } set {_spawnPoint = value; }  }
-    
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _centroDePatrulla;
+    [SerializeField] private Transform _modelo;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private NavMeshAgent _navMeshAgent;
+    private GameObject _objetivo;
+
+    private float _tiempoDeEsperaActual;
+    private bool _tieneDestino;
+    private bool _estaDetenido;
+
+    private void Awake()
     {
-        _playerLocated = false;
-        transform.position = _spawnPoint.transform.position;
-        _ida = true;
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        Vector3 direction;
+        _navMeshAgent.speed = _velocidad;
 
-        if (_playerLocated)
+        if (_centroDePatrulla == null)
         {
-            direction = _player.transform.position - transform.position;
+            _centroDePatrulla = transform;
         }
-        else if (_ida)
+
+        ElegirDestino();
+    }
+
+    private void Update()
+    {
+        if (_estaDetenido)
         {
-            direction =_patrollPoint.transform.position - transform.position;
+            ActualizarAnimaciones();
+            return;
+        }
+
+        if (_objetivo != null)
+        {
+            PerseguirObjetivo();
         }
         else
         {
-            direction = _spawnPoint.transform.position - transform.position;
+            Patrulla();
         }
 
-        transform.position += direction * _speed * Time.deltaTime;
+        ActualizarRotacion();
 
+         ActualizarAnimaciones();
     }
 
     public void LocatedPlayer(GameObject player)
     {
-        if (player != null)
+        _objetivo = player;
+        _tieneDestino = false;
+        Reanudar();
+    }
+
+
+    public void olvidarObjetivo()
+    {
+        _objetivo = null;
+        _tieneDestino = false;
+        Reanudar();
+        ElegirDestino();
+    }
+
+    public void DarseVuelta(bool value)
+    {
+        
+    }
+
+
+    private void ElegirDestino()
+    {
+        for (int i = 0; i < 10; i++)
         {
-            _playerLocated = true;
-            _player = player;
+            Vector3 direccionMov =
+                Random.insideUnitSphere * _patrolRadiud;
+
+            direccionMov += _centroDePatrulla.position;
+
+            if (NavMesh.SamplePosition(
+                direccionMov,
+                out NavMeshHit hit,
+                2f,
+                NavMesh.AllAreas))
+            {
+                _navMeshAgent.isStopped = false;
+                _navMeshAgent.SetDestination(hit.position);
+
+                _tieneDestino = true;
+                return;
+            }
+        }
+
+        _tieneDestino = false;
+        _tiempoDeEsperaActual = 0f;
+    }
+
+    private void PerseguirObjetivo()
+    {
+        if (_objetivo == null) return;
+
+        _navMeshAgent.isStopped = false;
+        _navMeshAgent.SetDestination(_objetivo.transform.position);
+    }
+
+    private void Patrulla()
+    {
+        if (!_tieneDestino)
+        {
+            _tiempoDeEsperaActual += Time.deltaTime;
+
+            if (_tiempoDeEsperaActual >= _tiempoDeEspera)
+            {
+                ElegirDestino();
+            }
+
+            return;
+        }
+
+        if (!_navMeshAgent.pathPending &&
+            _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
+        {
+            _tieneDestino = false;
+            _tiempoDeEsperaActual = 0f;
         }
     }
 
-    public void TurnArround(bool value)
+    private void ActualizarAnimaciones()
     {
-        _ida = value;
+        if (_animator == null) return;
+
+        bool camina =
+            !_navMeshAgent.isStopped &&
+            _navMeshAgent.velocity.sqrMagnitude > 0.05f;
+
+        _animator.SetBool("Camina", camina);
+    }
+
+    private void ActualizarRotacion()
+    {
+        if (_modelo == null) return;
+
+        if (_navMeshAgent.velocity.sqrMagnitude > 0.05f)
+        {
+            Vector3 direccion = _navMeshAgent.velocity.normalized;
+
+            Quaternion rotacionObjetivo = Quaternion.LookRotation(direccion);
+
+            _modelo.rotation = Quaternion.Slerp(
+                _modelo.rotation,
+                rotacionObjetivo * Quaternion.Euler(0, 180, 0),
+                Time.deltaTime * 10f
+            );
+        }
+    }
+    public void Detenerse()
+    {
+        _estaDetenido = true;
+        _navMeshAgent.isStopped = true;
+    }
+
+    public void Reanudar()
+    {
+        _estaDetenido = false;
+        _navMeshAgent.isStopped = false;
     }
 
 }

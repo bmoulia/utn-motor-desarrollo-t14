@@ -33,7 +33,7 @@ public class GrabableController : MonoBehaviour
 
         Character character = collision.gameObject.GetComponent<Character>();
 
-        if (character != null)
+        if (character != null && !(character is PlayerStatus))
         {
             character.TakeDamage(Mathf.Round(speed));
         }

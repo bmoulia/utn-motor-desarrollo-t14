@@ -1,13 +1,16 @@
+using Unity.VisualScripting;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.InputSystem.Switch;
 
-public class PlayerStatus : MonoBehaviour
+public class PlayerStatus : Character
 {
     private static PlayerStatus _playerStatus;
     [SerializeField] float _lowHealthTreshold;
     [SerializeField] private int _playerlifes;
     [SerializeField] private float _playerRespawnPorcentage;
+    [SerializeField] private GameObject _respawnPont;
+    [SerializeField] private Transform _spawnPoint;
     public enum playerState
     {
         Healthy,
@@ -37,6 +40,11 @@ public class PlayerStatus : MonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private void Awake()
+    {
+        if(!_spawnPoint)_spawnPoint = _respawnPont.gameObject.transform;
+    }
     void Start()
     {
         _playerCurrentState = playerState.Healthy;
@@ -50,7 +58,7 @@ public class PlayerStatus : MonoBehaviour
         if (_playerCurrentState != _playerNewState)
         {
             _playerCurrentState = _playerNewState;
-            UpdateGameManager(_playerCurrentState);
+            //UpdateGameManager(_playerCurrentState);
         }
         chekSound();
 
@@ -75,14 +83,14 @@ public class PlayerStatus : MonoBehaviour
         }
 
         if (playerCurrentLife <= 0 && _playerlifes<= 0) _playerNewState = playerState.Dead;
-        else if (playerCurrentLife / playerMaxLife <= _lowHealthTreshold) _playerNewState = playerState.LowHealth;
-        else if (playerCurrentLife / playerMaxLife > _lowHealthTreshold) _playerNewState = playerState.Healthy;
+        else if ((float)playerCurrentLife / playerMaxLife <= _lowHealthTreshold) _playerNewState = playerState.LowHealth;
+        else if ((float)playerCurrentLife / playerMaxLife > _lowHealthTreshold) _playerNewState = playerState.Healthy;
         else Debug.Log("playerLifeUpdateCheck playerState Missmatch");
 
         return playerCurrentLife;
     }
 
-    private void UpdateGameManager(playerState state)
+   /* private void UpdateGameManager(playerState state)
     {
         switch (state)
         {
@@ -99,7 +107,7 @@ public class PlayerStatus : MonoBehaviour
                 Debug.Log("UpdateGameManager playerState Missmatch");
                 break;
         }
-    }
+    }*/
 
     //La logica que controla el sonido del jugador
     private void chekSound()
@@ -143,6 +151,37 @@ public class PlayerStatus : MonoBehaviour
         _LastplayerMovementState = _playerMovementState;
         _playerMovementState = movementState;
         
+    }
+
+    protected override void CheckLife()
+    {
+        if (_health > 0f) return;
+        else if (_playerlifes > 0)
+        {
+            _playerlifes--;
+            Respawn();
+        }
+        else
+        {
+            _health = 0;
+            _playerNewState = playerState.Dead;
+        }
+    }
+
+    private void Respawn()
+    {
+        
+        _health = _maxHealth * _playerRespawnPorcentage;
+
+        
+        transform.position = _spawnPoint.position;
+        transform.rotation = _spawnPoint.rotation;
+
+        
+        if (_health / _maxHealth <= _lowHealthTreshold)
+            _playerNewState = playerState.LowHealth;
+        else
+            _playerNewState = playerState.Healthy;
     }
 
 
