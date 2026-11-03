@@ -38,14 +38,17 @@ public class PlayerMovement : MonoBehaviour
             velocidadVertical = -2f;
         }
         
-        //salto
-        if (Input.GetKeyDown(KeyCode.Space))
+        //salto (solo si está en el piso)
+        if (controller.isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Salto");
             velocidadVertical = Mathf.Sqrt(jump * -2f * gravity);
-            animator.SetTrigger("Jump");
-        }
 
+            if (animator != null)
+            {
+                animator.SetTrigger("Jump");
+            }
+        }
+        
         //caida
         velocidadVertical += gravity * Time.deltaTime;
 
