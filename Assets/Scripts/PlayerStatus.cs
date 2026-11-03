@@ -107,18 +107,20 @@ public class PlayerStatus : MonoBehaviour
         if (_playerMovementState == "Jumping" && _LastplayerMovementState != "Jumping" && _currentJumpCooldown <= 0)
         {
             //ejecuta el sonido de salto 
+            Debug.Log("Salto");
             _audioSource.PlayOneShot(_jumpClip);
             _currentJumpCooldown = _jumpCooldown;
         }
         else if (_playerMovementState != "Falling" && _LastplayerMovementState == "Falling" && _currentLandCooldown <= 0)
         {
             //ejecuta el sonido de aterrizaje
+            Debug.Log("aterrizaje");
             _audioSource.PlayOneShot(_landClip);
             _currentLandCooldown = _landCooldown;
         }
         else if (_playerMovementState == "Walking")
         {
-            
+            Debug.Log("Caminando");
             //ejecuta el sonido de caminata
             if(!_walkAudioSource.isPlaying) _walkAudioSource.Play();
 
@@ -130,7 +132,7 @@ public class PlayerStatus : MonoBehaviour
         }
         else if (_playerMovementState == "Static")
         {
-            
+            Debug.Log("Static");
         }
 
 

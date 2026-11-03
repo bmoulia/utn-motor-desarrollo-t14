@@ -77,9 +77,7 @@ public class PlayerMovement : MonoBehaviour
         else if (velocidadVertical < 0 && !controller.isGrounded) playerMovementState = "Falling";
         else if (mov.x != 0 || mov.z != 0) playerMovementState = "Walking";
         else playerMovementState = "Static";
-
-
-            _playerStatus.GetPlayerMovementState(playerMovementState);
+        _playerStatus.GetPlayerMovementState(playerMovementState);
 
         //animator.SetFloat("VelX", x);TUVE QUE COMENTAR ESTO PORQUE DA ERROR Y NO ME DEJA COMPILAR
         //animator.SetFloat("VelY", y);TUVE QUE COMENTAR ESTO PORQUE DA ERROR Y NO ME DEJA COMPILAR
