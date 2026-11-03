@@ -1,11 +1,17 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EndLevel : MonoBehaviour
 {
-    public GameObject pantallaGameOver;
-    private void OnCollisionEnter(Collision collision)
-    {
+    public GameObject gameOverScreen;
 
+    private void Start()
+    {
+        gameOverScreen.SetActive(false);
+    }
+     void OnTriggerEnter(Collider collision)
+    {
+        Debug.Log("Colisione");
         if (collision.gameObject.CompareTag("Player"))
         {
             ActivarPantallaYPausar();
@@ -14,9 +20,9 @@ public class EndLevel : MonoBehaviour
 private void ActivarPantallaYPausar()
 {
     // 1. Mostramos la pantalla en la interfaz
-    if (pantallaGameOver != null)
+    if (gameOverScreen != null)
     {
-        pantallaGameOver.SetActive(true);
+        gameOverScreen.SetActive(true);
     }
 
     // 2. Pausamos el juego por completo (frenamos el tiempo físico y de animaciones)
@@ -26,5 +32,10 @@ private void ActivarPantallaYPausar()
     Cursor.lockState = CursorLockMode.None;
     Cursor.visible = true;
 }
+    public void BackToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//Regargo la misma escena donde se activa automaticamente el menu
+    }
 
 }
