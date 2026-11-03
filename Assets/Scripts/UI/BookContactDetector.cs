@@ -9,6 +9,7 @@ public class BookContactDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("BOOK DETECTOR: contacto con " + other.name);
         if (messageShown || objectiveUI == null)
             return;
 

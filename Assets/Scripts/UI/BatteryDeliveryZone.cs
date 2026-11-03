@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using TMPro;
 using System.Collections;
@@ -12,10 +11,12 @@ public class BatteryDeliveryZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Rigidbody detected = other.GetComponent<Rigidbody>();
+        
         if (completed || targetBattery == null || objectiveUI == null)
             return;
 
-        if (other.attachedRigidbody != targetBattery)
+        if (detected != targetBattery)
             return;
 
         completed = true;
