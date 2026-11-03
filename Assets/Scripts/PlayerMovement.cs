@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         else playerMovementState = "Static";
         _playerStatus.GetPlayerMovementState(playerMovementState);
 
-        //animator.SetFloat("VelX", x);TUVE QUE COMENTAR ESTO PORQUE DA ERROR Y NO ME DEJA COMPILAR
-        //animator.SetFloat("VelY", y);TUVE QUE COMENTAR ESTO PORQUE DA ERROR Y NO ME DEJA COMPILAR
+        //animator.SetFloat("VelX", x);
+        //animator.SetFloat("VelY", y);
     }
 }
