@@ -40379,6 +40379,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507244206}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &509089898 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8031317503117006451, guid: c31501b18d95d82419dad970a9527842, type: 3}
+  m_PrefabInstance: {fileID: 2131108953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &526893676
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57853,7 +57858,7 @@ MonoBehaviour:
   _weaponRayClip: {fileID: 8300000, guid: 4b7f22894343a494e98e484e6e286947, type: 3}
   _rayo: {fileID: 1252147165}
   _materialRayo: {fileID: 2100000, guid: 2501029fe1139f044bc5b5d056399cbe, type: 2}
-  _puntoDisparo: {fileID: 1091310637}
+  _puntoDisparo: {fileID: 509089898}
   _anchoRayo: 0.08
   _parpadeo: 1
 --- !u!114 &875719144
@@ -57895,7 +57900,8 @@ MonoBehaviour:
   gravity: -9.81
   jump: 3
   _playerStatus: {fileID: 875719148}
-  animator: {fileID: 0}
+  animator: {fileID: 875719153}
+  suavizadoAnimacion: 0.1
   frenadoEmpuje: 5
   puedeMoverse: 1
 --- !u!143 &875719146
@@ -58273,6 +58279,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 0
+--- !u!95 &875719153 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: c31501b18d95d82419dad970a9527842, type: 3}
+  m_PrefabInstance: {fileID: 2131108953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &885640365
 GameObject:
   m_ObjectHideFlags: 0
@@ -69207,11 +69218,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!4 &1091310637 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -6953672774937516521, guid: c31501b18d95d82419dad970a9527842, type: 3}
-  m_PrefabInstance: {fileID: 2131108953}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1106419797 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5952368064663169448, guid: 11b702f199ac4f246940a9dcbebfdb16, type: 3}
@@ -181845,6 +181851,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c31501b18d95d82419dad970a9527842, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: c31501b18d95d82419dad970a9527842, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3477458934a45f042839aaf0216862cb, type: 2}
+    - target: {fileID: 5866666021909216657, guid: c31501b18d95d82419dad970a9527842, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
