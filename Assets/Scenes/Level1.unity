@@ -71746,6 +71746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1233896843}
   - component: {fileID: 1233896842}
+  - component: {fileID: 1233896844}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -71767,6 +71768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   startPanel: {fileID: 1268224759}
   objectivePanel: {fileID: 228062750}
+  healthPanel: {fileID: 843331753}
 --- !u!4 &1233896843
 Transform:
   m_ObjectHideFlags: 0
@@ -71782,6 +71784,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1233896844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233896841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b76af3e3cb7ee48b905e04b9eb2d96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  musicPlayer: {fileID: 1673143961}
 --- !u!1001 &1234930364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81126,7 +81141,7 @@ SpriteRenderer:
   m_Size: {x: 12.36, y: 16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!4 &1339707190
 Transform:
@@ -122597,6 +122612,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   gameOverScreen: {fileID: 1739777543}
+  objectivePanel: {fileID: 228062750}
+  objectivePUPanel: {fileID: 74012622}
+  healthPanel: {fileID: 843331753}
 --- !u!65 &1932676628
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -129117,7 +129135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2031713615
 Transform:
   m_ObjectHideFlags: 0
@@ -183883,6 +183901,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1233896843}
+  - {fileID: 2031713615}
   - {fileID: 329442521}
   - {fileID: 1355800512}
   - {fileID: 1057782325}
@@ -183899,4 +183918,3 @@ SceneRoots:
   - {fileID: 1961312690}
   - {fileID: 1162705589}
   - {fileID: 843331757}
-  - {fileID: 2031713615}

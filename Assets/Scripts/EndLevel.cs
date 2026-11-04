@@ -3,11 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class EndLevel : MonoBehaviour
 {
-    public GameObject gameOverScreen;
+    [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private GameObject objectivePanel;
+    [SerializeField] private GameObject objectivePUPanel;
+    [SerializeField] private GameObject healthPanel;
+
 
     private void Start()
     {
         gameOverScreen.SetActive(false);
+
     }
      void OnTriggerEnter(Collider collision)
     {
@@ -24,7 +29,10 @@ private void ActivarPantallaYPausar()
     if (gameOverScreen != null)
     {
         gameOverScreen.SetActive(true);
-    }
+        objectivePanel.SetActive(false);
+        objectivePUPanel.SetActive(false);
+        healthPanel.SetActive(false);
+        }
 
     // 2. Pausamos el juego por completo (frenamos el tiempo físico y de animaciones)
     Time.timeScale = 0f;
