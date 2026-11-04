@@ -501,13 +501,21 @@ MonoBehaviour:
   _maxHealth: 15
   _radioDeDeteccion: 10
   _radioDePersecucion: 15
+  _radioDeOido: 3
   _playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  _capasQueTapanVision:
+    serializedVersion: 2
+    m_Bits: 1
+  _alturaOjos: 0.5
+  _tiempoDeMemoria: 3
+  _tiempoDeBusqueda: 4
   _rangoDeAtaque: 2
   "_da\xF1o": 10
   _cooldown: 2
   _delay: 0.5
+  _fuerzaEmpuje: 8
   _movement: {fileID: -4215782240677363394}
   _animator: {fileID: -4263254391364995332}
 --- !u!114 &-4215782240677363394
@@ -523,6 +531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   _velocidad: 2
+  _velocidadPersecucion: 4.5
   _patrolRadiud: 5
   _tiempoDeEspera: 2
   _animator: {fileID: 0}
@@ -538,7 +547,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
