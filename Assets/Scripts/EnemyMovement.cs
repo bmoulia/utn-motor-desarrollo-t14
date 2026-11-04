@@ -12,6 +12,12 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private Transform _centroDePatrulla;
     [SerializeField] private Transform _modelo;
 
+
+    [Header("Sonidos")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _moveClip;
+
+
     private NavMeshAgent _navMeshAgent;
     private GameObject _objetivo;
 
@@ -28,6 +34,8 @@ public class EnemyMovement : MonoBehaviour
         {
             _animator = GetComponentInChildren<Animator>();
         }
+
+        _audioSource.clip = _moveClip;
     }
 
     private void Start()
@@ -59,6 +67,7 @@ public class EnemyMovement : MonoBehaviour
             Patrulla();
         }
 
+        ActualizarSonidos();
         ActualizarRotacion();
         ActualizarAnimaciones();
     }
@@ -195,5 +204,19 @@ public class EnemyMovement : MonoBehaviour
     {
         _estaDetenido = false;
         _navMeshAgent.isStopped = false;
+    }
+
+    private void ActualizarSonidos()
+    {
+        if (_audioSource == null) return;
+        bool camina = !_navMeshAgent.isStopped && _navMeshAgent.velocity.sqrMagnitude > 0.05f;
+        if (camina && !_audioSource.isPlaying)
+        {
+            _audioSource.Play();
+        }
+        else if (!camina && _audioSource.isPlaying)
+        {
+            _audioSource.Stop();
+        }
     }
 }

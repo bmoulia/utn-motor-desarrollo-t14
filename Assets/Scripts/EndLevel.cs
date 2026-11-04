@@ -15,6 +15,7 @@ public class EndLevel : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             ActivarPantallaYPausar();
+            GameManager._instance.GetUpdateGameStatus("GameStatus", "Victory");
         }
     } 
 private void ActivarPantallaYPausar()

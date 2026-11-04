@@ -10,54 +10,90 @@ using static PlayerStatus;
 
 public class GameManager : MonoBehaviour
 {
-    private _gameState _currentGameState;
-    private enum _gameState
-    {
-        Menu,
-        Paused,
-        Playing,
-        LowHealth,
-        Victory,
-        GameOver
-    }
     private int _score;
     public static GameManager _instance;
-    [SerializeField] private PlayerStatus _playerStatus;
-    [SerializeField] private GameObject _enemies;
-    [SerializeField] private GameObject _musicComposer;
-    [SerializeField] private GameObject _menu;
+
+    [SerializeField] private GameObject musicPlayer;
+    private MusicPlayer _musicPlayer;
 
     private Dictionary<string, string> _gameCurrentStatus = new()
     {
         { "PlayerState", ""},
+        { "InCombat", ""},
+        { "GameStatus", ""}
+    };
+    private Dictionary<string, string> _gamePastStatus = new()
+    {
+        { "PlayerState", ""},
+        { "InCombat", ""},
         { "GameStatus", ""}
     };
     private float timer = 0f;
 
 
+    private void Awake()
+    {
+    _instance = this;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _gameCurrentStatus["PlayerState"] = "Healthy";
-        _gameCurrentStatus["GameStatus"] = "Menu";
+        _gameCurrentStatus["InCombat"] = "False";
+        _gameCurrentStatus["GameStatus"] = "Playing";
+        _musicPlayer = musicPlayer.GetComponent<MusicPlayer>();
     }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
+        ActualizarEstadoCombate();
+        if (_gameCurrentStatus != _gamePastStatus)
+        {
+            _gamePastStatus = new Dictionary<string, string>(_gameCurrentStatus);
+
+            Debug.Log(_gamePastStatus["PlayerState"]);
+            Debug.Log(_gamePastStatus["InCombat"]);
+            Debug.Log(_gamePastStatus["GameStatus"]);
+
+            UpdateGameState();
+        }
 
     }
 
     private void UpdateGameState()
     {
-        int state = 0;
+        switch (_gameCurrentStatus["GameStatus"])
+        {
+            case "Playing":
+                if (_gameCurrentStatus["InCombat"] == "True")
+                {
+                    _musicPlayer.PlayCombatMusic();
+                    break;
+                }
 
-        switch (state) { 
-        
-        
-        } 
+                switch (_gameCurrentStatus["PlayerState"])
+                {
+                    case "Healthy":
+                        _musicPlayer.PlayNormalMusic();
+                        break;
 
+                    case "LowHealth":
+                        _musicPlayer.PlayLowHealthSnapshot();
+                        break;
+                }
+                break;
+
+            case "Victory":
+                _musicPlayer.PlayVictoryMusic();
+                break;
+
+            case "GameOver":
+                _musicPlayer.PlayGameOverMusic();
+                break;
+        }
     }
 
     public void UpdateScore(int _addToScore)
@@ -65,32 +101,29 @@ public class GameManager : MonoBehaviour
         _score += _addToScore;
     }
 
-    public string UpdateComposer()
-    {
-        switch (_currentGameState)
-        {
-            case _gameState.Menu:
-                return "Menu";
-            case _gameState.Paused:
-                return "Paused";
-            case _gameState.Playing:
-                return "Playing";
-            case _gameState.LowHealth:
-                return "Playing";
-            case _gameState.Victory:
-                return "Playing";
-            case _gameState.GameOver:
-                return "GameOver";
-            default:
-                Debug.Log("UpdateComposer gameState Missmatch");
-                break;
-        }
-        return "MissingState";
-    }
-
-    public void getUpdate(string value, string var)
+    public void GetUpdateGameStatus(string var, string value)
     {
         if (_gameCurrentStatus.ContainsKey(var)) _gameCurrentStatus[var] = value;
         else Debug.Log("GameManager.getUpdate() " + var + " is the wrong key");
     }
+
+    private void ActualizarEstadoCombate()
+    {
+        EnemyController[] enemigos =
+            FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
+
+        bool hayCombate = false;
+
+        foreach (EnemyController enemigo in enemigos)
+        {
+            if (enemigo.EstaEnCombate)
+            {
+                hayCombate = true;
+                break;
+            }
+        }
+
+        GetUpdateGameStatus("InCombat", hayCombate ? "True" : "False");
+    }
+
 }

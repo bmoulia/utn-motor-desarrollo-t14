@@ -27,6 +27,10 @@ public class EnemyController : Character
     [SerializeField] private EnemyMovement _movement;
     [SerializeField] private Animator _animator;
 
+    [Header("Sonidos")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _attackClip;
+
     private Estado _estado = Estado.Patrullando;
     private Character _objetivo;
     private Vector3 _ultimaPosicionConocida;
@@ -34,6 +38,8 @@ public class EnemyController : Character
     private float _tiempoBuscando;
     private bool _atacando;
     private bool _estaMuerta;
+
+    public bool EstaEnCombate => _estado == Estado.Persiguiendo;
 
     protected override void Awake()
     {
@@ -44,6 +50,8 @@ public class EnemyController : Character
 
         if (_animator == null)
             _animator = GetComponentInChildren<Animator>();
+        
+        _audioSource.clip = _attackClip;
     }
 
     private void Update()
@@ -62,6 +70,15 @@ public class EnemyController : Character
 
             case Estado.Buscando:
                 ActualizarBusqueda();
+                break;
+        }
+        switch (_estado)
+        {
+            case Estado.Persiguiendo:
+                GameManager._instance.GetUpdateGameStatus("InCombat", "True");
+                break;
+            default:
+                GameManager._instance.GetUpdateGameStatus("InCombat", "False");
                 break;
         }
     }
@@ -189,6 +206,7 @@ public class EnemyController : Character
         _atacando = true;
         _movement.Detenerse();
         _movement.MirarHacia(_objetivo.transform.position);
+        _audioSource.Play();
 
         if (_animator != null)
         {

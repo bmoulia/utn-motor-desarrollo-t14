@@ -18,6 +18,8 @@ public class PlayerStatus : Character
     [SerializeField] private GameObject _pantallaMuerte;   // opcional: panel de "Perdiste"
     [SerializeField] private float _esperaAntesDeReiniciar = 2f;
 
+    private GameManager _gameManager = GameManager._instance;
+
     public enum playerState
     {
         Healthy,
@@ -86,6 +88,19 @@ public class PlayerStatus : Character
         else if (_currentJumpCooldown < 0) _currentJumpCooldown = 0;
         if (_currentLandCooldown > 0) _currentLandCooldown -= Time.deltaTime;
         else if (_currentLandCooldown < 0) _currentLandCooldown = 0;
+
+        switch (_playerCurrentState)
+        {
+            case playerState.Healthy:
+                GameManager._instance.GetUpdateGameStatus("PlayerState", "Healthy");
+                break;
+            case playerState.LowHealth:
+                GameManager._instance.GetUpdateGameStatus("PlayerState", "LowHealth");
+                break;
+            case playerState.Dead:
+                GameManager._instance.GetUpdateGameStatus("GameStatus", "GameOver");
+                break;
+        }
     }
 
     public override void TakeDamage(float damage)
@@ -167,6 +182,8 @@ public class PlayerStatus : Character
             //si no hay pantalla de muerte, reinicia el nivel solo
             Invoke(nameof(Reintentar), _esperaAntesDeReiniciar);
         }
+        
+
     }
 
     //se puede asignar a un boton "Reintentar" de la pantalla de muerte
